@@ -11,12 +11,6 @@ DOMAIN_SERVER = "www.MARE.com.br"
 DNS_REP_ADDR = ('localhost', DNS__REP_PORT)
 DNS_CLI_ADDR = ('localhost', DNS_CLI_PORT)
 
-FOLDER = "C:\\Users\\ROSINALDO\\Desktop\\UFPE 2018.2\\infracom\\PROJETO\\Projeto_2018_2\\Projeto_InfraCom-master\\server\\"
-FOLDER_CLI = "C:\\Users\\ROSINALDO\\Desktop\\UFPE 2018.2\\infracom\\PROJETO\\Projeto_2018_2\\Projeto_InfraCom-master\\client\\"  
-#serverAddr = ('localhost', CLI_REP_PORT)
-
-# def getSlash():
-#     if platform.system() == "Linux":
-#         return "/"
-#     else:
-#         return "\\"
+#altere somente a string da esquerda
+FOLDER = "C:\\Users\\ROSINALDO\\Desktop\\Infracom-Project" + "\\server\\"
+FOLDER_CLI = "C:\\Users\\ROSINALDO\\Desktop\\Infracom-Project" + "\\client\\"

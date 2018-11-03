@@ -48,7 +48,7 @@ def tcpServerConection():
 
     while True:
         i = 0
-        op = getOp()
+        op = int(getOp())
 
         if op == 1:
             clientSocket.send("download".encode('utf-8'))

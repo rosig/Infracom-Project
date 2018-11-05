@@ -12,8 +12,13 @@ def menu():
     print("+----------------------------------------------+\n")
 
 def getOp():
-    op = input("Digite o numero da opcao que deseja: ")
-    return op
+    
+    while True:
+        op = input("Digite o numero da opcao que deseja: ")
+        if op == "1" or op == "2" or op == "3":
+            return int(op)
+        else:
+            print("A opção digitada não existe\n")
 
 def fileNam():
     fileName = input("Name of the file you want to download:")
@@ -48,27 +53,36 @@ def tcpServerConection():
 
     while True:
         i = 0
-        op = int(getOp())
+        op = getOp()
 
         if op == 1:
             clientSocket.send("download".encode('utf-8'))
             fileName = fileNam()
             clientSocket.send(fileName.encode('utf-8'))
-            fileSize= int(clientSocket.recv(BUFFER_SIZE))
-            arq = open(FOLDER_CLI + fileName, 'wb')
-            size = fileSize
 
-            while size > 0:
-                data = clientSocket.recv(1024)
-                size = size - len(data)
-                arq.write(data)
+            res = clientSocket.recv(BUFFER_SIZE).decode('utf-8') #resposta de se o arquivo está no servidor
+            print("RES:" + res)
+            if res == "exist":
+                fileSize= int(clientSocket.recv(BUFFER_SIZE))
+                arq = open(FOLDER_CLI + fileName, 'wb')
+                size = fileSize
 
-            arq.close()
+                while size > 0:
+                    data = clientSocket.recv(1024)
+                    size = size - len(data)
+                    arq.write(data)
+
+                arq.close()
+                print("Download realizado com sucesso !\n")
+
+            elif res == "notExist":
+                print ("O arquivo solititado não existe no servidor")
 
         elif op == 2:
             clientSocket.send("checkFiles".encode('utf-8'))
             print("Message Sent! Waiting server response...\n")
-            listSize = int(clientSocket.recv(BUFFER_SIZE))
+            res = clientSocket.recv(BUFFER_SIZE) #temporario (ta bugado)
+            listSize = int(res.decode('utf-8'))
 
             print("+--------------- Arquivos contidos no servidor ----------------+")
 

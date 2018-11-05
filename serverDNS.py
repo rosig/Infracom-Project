@@ -2,8 +2,6 @@
 from lib.constants import *
 from socket import *
 
-serverPortRep = DNS__REP_PORT
-serverPortCli = DNS_CLI_PORT
 domain = ""
 address = ""
 
@@ -14,7 +12,7 @@ def recvTranslation():
     serverSocket = socket(AF_INET,SOCK_DGRAM)
     print("The serverDNS is ready to receive domain and address from ServerRepository")
 
-    serverSocket.bind(('',serverPortRep))
+    serverSocket.bind(('',DNS__REP_PORT))
     domain, clientAddress = serverSocket.recvfrom(BUFFER_SIZE)
     address, clientAddress = serverSocket.recvfrom(BUFFER_SIZE)
     print("Domain and address received")         
@@ -28,7 +26,7 @@ def sendTranslation():
     serverSocket = socket(AF_INET,SOCK_DGRAM)
     print("The serverDNS is ready to receive requests from Client")
 
-    serverSocket.bind(('',serverPortCli))
+    serverSocket.bind(('',DNS_CLI_PORT))
     asking, clientAddress = serverSocket.recvfrom(BUFFER_SIZE)
 
     if asking == domain:

@@ -52,16 +52,20 @@ def handle_client(index):
 
         elif msg == "download":
             fileName = server.recvMessage(index)
-            server.sendMessage((str(os.path.getsize(FOLDER + fileName))), index)
-            arq = open(FOLDER + fileName, 'rb')
-        
-            for line in arq:
-                server.connectedSockets[index].send(line)
+            if (os.path.isfile(FOLDER + fileName)): #verifica se o arquivo que se deseja baixar está contido no servidor
+                server.sendMessage("exist",index)
+                server.sendMessage((str(os.path.getsize(FOLDER + fileName))), index)
+                arq = open(FOLDER + fileName, 'rb')
+            
+                for line in arq:
+                    server.connectedSockets[index].send(line)
 
-            arq.close()
+                arq.close()
 
-            print ("File successfully downloaded\n")
-
+                print ("File successfully downloaded\n")
+            else:
+                server.sendMessage("notExist",index)
+                print ("File not successfully downloaded\n")
 def main():
 
     sendToDNS()

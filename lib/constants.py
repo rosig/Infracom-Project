@@ -12,5 +12,8 @@ DNS_REP_ADDR = ('localhost', DNS__REP_PORT)
 DNS_CLI_ADDR = ('localhost', DNS_CLI_PORT)
 
 #altere somente a string da esquerda
-FOLDER = "/home/CIN/rglj2/Desktop/Infracom-Project-master" + "/server/"
-FOLDER_CLI = "/home/CIN/rglj2/Desktop/Infracom-Project-master" + "/client/"
+# FOLDER = "/home/CIN/rglj2/Desktop/Infracom-Project-master" + "/server/"
+# FOLDER_CLI = "/home/CIN/rglj2/Desktop/Infracom-Project-master" + "/client/"
+
+FOLDER = "C:\\Users\\ROSINALDO\\Desktop\\Infracom-Project" + "\\SERVIDOR\\"
+FOLDER_CLI = "C:\\Users\\ROSINALDO\\Desktop\\Infracom-Project" + "\\CLIENTE\\"

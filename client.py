@@ -18,10 +18,10 @@ def getOp():
         if op == "1" or op == "2" or op == "3":
             return int(op)
         else:
-            print("A opção digitada não existe\n")
+            print("# A opção digitada não existe\n")
 
 def fileNam():
-    fileName = input("Name of the file you want to download:")
+    fileName = input("Digite o nome do arquivo que deseja baixar:")
     return  fileName
 
 def requestAddressToDNS():
@@ -29,25 +29,20 @@ def requestAddressToDNS():
     message = DOMAIN_SERVER
 
     Clientsocket = socket(AF_INET, SOCK_DGRAM)
-    print("Socket Started")
-
+    #print("Socket Started")
     Clientsocket.sendto(message.encode('utf-8'),DNS_CLI_ADDR)
-    print("Requested address to DNS server. Waiting response ....")
-
+    #print("Requested address to DNS server. Waiting response ....")
     address, addr = Clientsocket.recvfrom(BUFFER_SIZE)
-    print("Server response: ", address)
-
+    #print("Server response: ", address)
     Clientsocket.close()
-    print("Socket Closed\n\n")
+    #print("Socket Closed\n\n")
 
 def tcpServerConection():
     global address
-
     clientSocket = socket(AF_INET, SOCK_STREAM)
-    print("ConnectionSocket configured! Connecting...")
-
+    #print("ConnectionSocket configured! Connecting...")
     clientSocket.connect((address,CLI_REP_PORT))
-    print("ConnectionSocket started!")
+    #print("ConnectionSocket started!")
 
     menu()
 
@@ -59,9 +54,8 @@ def tcpServerConection():
             clientSocket.send("download".encode('utf-8'))
             fileName = fileNam()
             clientSocket.send(fileName.encode('utf-8'))
-
             res = clientSocket.recv(BUFFER_SIZE).decode('utf-8') #resposta de se o arquivo está no servidor
-            print("RES:" + res)
+            
             if res == "exist":
                 fileSize= int(clientSocket.recv(BUFFER_SIZE))
                 arq = open(FOLDER_CLI + fileName, 'wb')
@@ -73,17 +67,17 @@ def tcpServerConection():
                     arq.write(data)
 
                 arq.close()
-                print("Download realizado com sucesso !\n")
+                print("# Download realizado com sucesso !\n")
 
             elif res == "notExist":
-                print ("O arquivo solititado não existe no servidor")
+                print ("# O arquivo solititado não existe no servidor")
 
         elif op == 2:
             clientSocket.send("checkFiles".encode('utf-8'))
-            print("Message Sent! Waiting server response...\n")
+            #print("Message Sent! Waiting server response...\n")
             res = clientSocket.recv(BUFFER_SIZE) #temporario (ta bugado)
             listSize = int(res.decode('utf-8'))
-
+            
             print("+--------------- Arquivos contidos no servidor ----------------+")
 
             while i < listSize:
@@ -96,7 +90,7 @@ def tcpServerConection():
 
         else:
             clientSocket.close()
-            print("A conexao com o servidor foi encerrada !\n")
+            print("# A conexao com o servidor foi encerrada !\n")
             #print("Socket Closed")
             break
 

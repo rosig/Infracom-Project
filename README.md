@@ -3,7 +3,7 @@
 Ordem de execução
 
 - 1º serverDNS.py
-- 2º serverRepository.py
+- 2º serverRep.py
 - 3º client.py
 
 Observações

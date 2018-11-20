@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from lib.constants import *
 from socket import *
+import sys
+
 address =  " "
 
 def menu():
@@ -43,16 +45,17 @@ def tcpServerConection():
     #print("ConnectionSocket configured! Connecting...")
     clientSocket.connect((address,CLI_REP_PORT))
     #print("ConnectionSocket started!")
-
     menu()
 
     while True:
         i = 0
+        
         op = getOp()
 
         if op == 1:
             clientSocket.send("download".encode('utf-8'))
             fileName = fileNam()
+            fileName = fileName.strip()
             clientSocket.send(fileName.encode('utf-8'))
             res = clientSocket.recv(BUFFER_SIZE).decode('utf-8') #resposta de se o arquivo está no servidor
             
@@ -61,13 +64,23 @@ def tcpServerConection():
                 arq = open(FOLDER_CLI + fileName, 'wb')
                 size = fileSize
 
+                print('\n\nFazendo Download')
+
                 while size > 0:
+                    sys.stdout.write('\r')
                     data = clientSocket.recv(1024)
                     size = size - len(data)
+
+                    percentage = (fileSize - size) * 100 / fileSize
+
+                    sys.stdout.write("[%-100s] %d%%" % ('=' * int(percentage), percentage))
+                    sys.stdout.flush()
                     arq.write(data)
 
                 arq.close()
-                print("# Download realizado com sucesso !\n")
+                print("\n\n# Download realizado com sucesso!\n")
+
+                menu()
 
             elif res == "notExist":
                 print ("# O arquivo solititado não existe no servidor")

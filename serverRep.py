@@ -14,10 +14,26 @@ server = svr.TCPServerSocket()
 try:
     os.stat(FOLDER)
     os.stat(FOLDER_CLI)
+    arq = open(FOLDER + 'dados.txt', 'wb')
+    arq.close()
 except:
     os.mkdir(FOLDER)
     os.mkdir(FOLDER_CLI)
     #print("Uma pasta para os clientes e uma pasta para o servidor foram criadas")
+
+def updateFileFolder():
+    i = 0
+    arq = open(FOLDER + 'dados.txt', 'w+')
+    filesInFolder = arq.readlines()
+    files = os.listdir(FOLDER)
+    comp = len(files)
+
+    while i < comp:
+        if ((files[i] + '\n') not in filesInFolder): 
+            arq.write(files[i] + '\n')
+        i = i + 1
+        
+    arq.close()
 
 def sendToDNS(): #envia dominio e endereco para servidor DNS
     messageDom = DOMAIN_SERVER
@@ -40,15 +56,16 @@ def handle_client(index):
     while True:
         msg = server.recvMessage(index)
         if msg == "checkFiles":
+            updateFileFolder()
             #print("\nFiles in your folder:")
-            files = os.listdir(FOLDER)
-            dim = str(len(files))
-            server.sendMessage(dim,index)
 
-            for i in files:
-                server.sendMessage(i,index)
-                #print(i)
-            #print("\n")
+            server.sendMessage((str(os.path.getsize(FOLDER + 'dados.txt'))), index)
+            arq = open(FOLDER + 'dados.txt', 'rb')
+            
+            for line in arq:
+                server.connectedSockets[index].send(line)
+
+            arq.close()
 
         elif msg == "download":
             fileName = server.recvMessage(index)
@@ -66,6 +83,9 @@ def handle_client(index):
             else:
                 server.sendMessage("notExist",index)
                 print ("# Arquivo nao existe\n")
+
+        elif msg == "socketClose":
+            print("# A conexão com o cliente de index ",index," foi encerrada")
 def main():
 
     sendToDNS()

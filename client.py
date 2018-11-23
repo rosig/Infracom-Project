@@ -48,8 +48,7 @@ def tcpServerConection():
     menu()
 
     while True:
-        i = 0
-        
+
         op = getOp()
 
         if op == 1:
@@ -87,24 +86,43 @@ def tcpServerConection():
 
         elif op == 2:
             clientSocket.send("checkFiles".encode('utf-8'))
-            #print("Message Sent! Waiting server response...\n")
-            res = clientSocket.recv(BUFFER_SIZE) #temporario (ta bugado)
-            listSize = int(res.decode('utf-8'))
-            
-            print("+--------------- Arquivos contidos no servidor ----------------+")
 
-            while i < listSize:
-                msg = clientSocket.recv(BUFFER_SIZE)
-                msg = msg.decode('utf-8')
-                print ("|  " + msg)
-                i = i + 1
+            fileSize= int(clientSocket.recv(BUFFER_SIZE))
+            arq = open(FOLDER_CLI + 'dados.txt', 'wb')
+            size = fileSize
+
+            while size > 0:
+                    sys.stdout.write('\r')
+                    data = clientSocket.recv(1024)
+                    size = size - len(data)
+
+                    percentage = (fileSize - size) * 100 / fileSize
+
+                    sys.stdout.write("[%-100s] %d%%" % ('=' * int(percentage), percentage))
+                    sys.stdout.flush()
+                    arq.write(data)
+
+            print("\n# Lista dos arquivos recebida com sucesso")
+
+            arq.close()
+
+            print("\n\n")
+            print("+--------------- Arquivos contidos no servidor ----------------+\n")
+
+            arq = open(FOLDER + 'dados.txt', 'r+')
+            filesInFolder = arq.readlines()
+
+            for i in filesInFolder:
+                print(i)
+    
+            arq.close()
 
             print("+--------------------------------------------------------------+\n")
 
         else:
+            clientSocket.send("socketClose".encode('utf-8'))
             clientSocket.close()
             print("# A conexao com o servidor foi encerrada !\n")
-            #print("Socket Closed")
             break
 
 

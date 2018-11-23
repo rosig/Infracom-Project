@@ -82,7 +82,7 @@ def tcpServerConection():
                 menu()
 
             elif res == "notExist":
-                print ("\n# O arquivo solicititado não existe no servidor\n")
+                print ("# O arquivo solititado não existe no servidor")
 
         elif op == 2:
             clientSocket.send("checkFiles".encode('utf-8'))
@@ -93,7 +93,9 @@ def tcpServerConection():
 
             while size > 0:
                 sys.stdout.write('\r')
+                print("test")
                 data = clientSocket.recv(1024)
+                print(data)
                 size = size - len(data)
                 
                 percentage = (fileSize - size) * 100 / fileSize

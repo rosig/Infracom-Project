@@ -1,0 +1,7 @@
+dados.txt
+README.md
+clientdados.txt
+serverRep.py
+serverDNS.py
+serverdados.txt
+client.py

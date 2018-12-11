@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 from socket import *
-from lib import libServer as svr
 import _thread
 import os.path
 import sys
 from lib.constants import *
+import ReliableSocket
 
-server = svr.TCPServerSocket()
+server = ReliableSocket.Server()
 #print("The server is ready to receive TCP")
 
 #coloque abaixo o diretorio onde esta rodando o codigo, seguido de \\server\\

@@ -2,6 +2,7 @@
 from lib.constants import *
 from socket import *
 import sys
+import ReliableSocket
 
 address =  " "
 
@@ -41,7 +42,7 @@ def requestAddressToDNS():
 
 def tcpServerConection():
     global address
-    clientSocket = socket(AF_INET, SOCK_STREAM)
+    clientSocket = ReliableSocket.Client()
     #print("ConnectionSocket configured! Connecting...")
     clientSocket.connect((address,CLI_REP_PORT))
     #print("ConnectionSocket started!")

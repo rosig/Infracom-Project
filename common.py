@@ -8,7 +8,7 @@ def calcChecksum(content):
     
     while pos > 0:
         pos -= 2
-        sum = (ord(content[pos+1]) << 8) + ord(content[pos])
+        sum += (ord(content[pos+1]) << 8) + ord(content[pos])
     
     sum = sum & 0xffff
     mask = (1 << 16) - 1

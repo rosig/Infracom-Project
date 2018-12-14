@@ -4,9 +4,10 @@ import _thread
 import os.path
 import sys
 from lib.constants import *
-import ReliableSocket
+import rdt
 
-server = ReliableSocket.Server()
+server = rdt.Socket()
+server.bind('localhost', SERVER_PORT)
 #print("The server is ready to receive TCP")
 
 #coloque abaixo o diretorio onde esta rodando o codigo, seguido de \\server\\
@@ -54,47 +55,43 @@ def sendToDNS(): #envia dominio e endereco para servidor DNS
     Clientsocket.close()
     #print("Socket Closed")
 
-def handle_client(index):
+def handle_client():
 
     while True:
-        msg = server.recvMessage(index)
-        if msg == "checkFiles":
+        msg = server.receive()
+        if msg[2] == "checkFiles":
             updateFileFolder()
             #print("\nFiles in your folder:")
 
-            server.sendMessage((str(os.path.getsize(DATA))), index)
+            server.send(str(os.path.getsize(DATA)), msg[0], msg[1])
             arq = open(DATA, 'rb')
             
             for line in arq:
-                server.connectedSockets[index].send(line)
+                server.send(str(line), msg[0], msg[1])
 
             arq.close()
 
-        elif msg == "download":
-            fileName = server.recvMessage(index)
+        elif msg[2] == "download":
+            fileName = server.receive()[2]
             if (os.path.isfile(os.path.join(FOLDER, fileName))): #verifica se o arquivo que se deseja baixar está contido no servidor
-                server.sendMessage("exist",index)
-                server.sendMessage((str(os.path.getsize(os.path.join(FOLDER, fileName)))), index)
+                server.send("exist", msg[0], msg[1])
+                server.send((str(os.path.getsize(os.path.join(FOLDER, fileName)))), msg[0], msg[1])
                 arq = open(os.path.join(FOLDER, fileName), 'rb')
             
                 for line in arq:
-                    server.connectedSockets[index].send(line)
+                    server.send(str(line), msg[0], msg[1])
 
                 arq.close()
 
                 print ("# Arquivo baixado com sucesso\n")
             else:
-                server.sendMessage("notExist",index)
+                server.send("notExist",msg[0], msg[1])
                 print ("# Arquivo nao existe\n")
 
-        elif msg == "socketClose":
-            print("# A conexão com o cliente de index ",index," foi encerrada")
 def main():
 
     sendToDNS()
-    while True:
-        index = server.acceptConnection()
-        num = _thread.start_new_thread(handle_client, (index,))
+    handle_client()
                     
     return  
 

@@ -2,7 +2,7 @@
 from lib.constants import *
 from socket import *
 import sys
-import ReliableSocket
+import rdt
 
 address =  " "
 
@@ -40,12 +40,10 @@ def requestAddressToDNS():
     Clientsocket.close()
     #print("Socket Closed\n\n")
 
-def tcpServerConection():
+def rdtServerConection():
     global address
-    clientSocket = ReliableSocket.Client()
-    #print("ConnectionSocket configured! Connecting...")
-    clientSocket.connect((address,CLI_REP_PORT))
-    #print("ConnectionSocket started!")
+    client = rdt.Socket()
+    client.bind('localhost', CLI_REP_PORT)
     menu()
 
     while True:
@@ -53,14 +51,13 @@ def tcpServerConection():
         op = getOp()
 
         if op == 1:
-            clientSocket.send("download".encode('utf-8'))
+            client.send("download", address, SERVER_PORT)
             fileName = fileNam()
-            fileName = fileName.strip()
-            clientSocket.send(fileName.encode('utf-8'))
-            res = clientSocket.recv(BUFFER_SIZE).decode('utf-8') #resposta de se o arquivo está no servidor
+            client.send(fileName, address, SERVER_PORT)
+            res = client.receive()[2] #resposta de se o arquivo está no servidor
             
             if res == "exist":
-                fileSize= int(clientSocket.recv(BUFFER_SIZE))
+                fileSize= int(client.receive()[2])
                 arq = open(os.path.join(FOLDER_CLI, fileName), 'wb')
                 size = fileSize
 
@@ -68,14 +65,14 @@ def tcpServerConection():
 
                 while size > 0:
                     sys.stdout.write('\r')
-                    data = clientSocket.recv(1024)
+                    data = client.receive()[2]
                     size = size - len(data)
 
                     percentage = (fileSize - size) * 100 / fileSize
 
                     sys.stdout.write("[%-100s] %d%%" % ('=' * int(percentage), percentage))
                     sys.stdout.flush()
-                    arq.write(data)
+                    arq.write(bytes(data, 'utf-8'))
 
                 arq.close()
                 print("\n\n# Download realizado com sucesso!\n")
@@ -86,22 +83,22 @@ def tcpServerConection():
                 print ("\n# O arquivo solicititado não existe no servidor\n")
 
         elif op == 2:
-            clientSocket.send("checkFiles".encode('utf-8'))
+            client.send("checkFiles", address, SERVER_PORT)
 
-            fileSize= int(clientSocket.recv(BUFFER_SIZE))
+            fileSize= int(client.receive()[2])
             arq = open(os.path.join(FOLDER_CLI, 'dados.txt'), 'wb')
             size = fileSize
 
             while size > 0:
                 sys.stdout.write('\r')
-                data = clientSocket.recv(1024)
+                data = client.receive()[2]
                 size = size - len(data)
                 
                 percentage = (fileSize - size) * 100 / fileSize
 
                 sys.stdout.write("[%-100s] %d%%" % ('=' * int(percentage), percentage))
                 sys.stdout.flush()
-                arq.write(data)
+                arq.write(bytes(data, 'utf-8'))
 
             print("\n# Lista dos arquivos recebida com sucesso")
 
@@ -120,16 +117,10 @@ def tcpServerConection():
 
             print("+--------------------------------------------------------------+\n")
 
-        else:
-            clientSocket.send("socketClose".encode('utf-8'))
-            clientSocket.close()
-            print("# A conexao com o servidor foi encerrada !\n")
-            break
-
 
 def main():
     requestAddressToDNS()
-    tcpServerConection()
+    rdtServerConection()
 
 if __name__ == "__main__":
     main()

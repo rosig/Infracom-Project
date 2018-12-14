@@ -2,7 +2,7 @@
 import platform
 import os
 
-#serverPort = 12015
+SERVER_PORT = 12015
 CLI_REP_PORT = 14740
 DNS__REP_PORT = 14750
 DNS_CLI_PORT = 14810

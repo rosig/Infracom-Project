@@ -11,6 +11,7 @@ def menu():
     print("+------------------ Funcoes -------------------+")
     print("| (1) Solicitar Arquivo                        |")
     print("| (2) Listar Arquivos do Servidor              |")
+    print("| (3) Encerrar conexao com o servidor          |")
     print("+----------------------------------------------+\n")
 
 def getOp():
@@ -52,6 +53,7 @@ def rdtServerConection():
         if op == 1:
             client.send("download", address, SERVER_PORT)
             fileName = fileNam()
+            fileName = fileName.strip()
             client.send(fileName, address, SERVER_PORT)
             res = client.receive()[2] #resposta de se o arquivo está no servidor
             
@@ -116,6 +118,11 @@ def rdtServerConection():
 
             print("+--------------------------------------------------------------+\n")
 
+        elif op == 3:
+            client.send("socketClose", address, SERVER_PORT)
+            client.unbind()
+            print("# A conexao com o servidor foi encerrada !\n")
+            break
 
 def main():
     requestAddressToDNS()

@@ -73,3 +73,6 @@ class Socket:
                 self.send_socket.sendto(inv_pack, dest)
                 return -1
         return -1
+
+    def unbind(self):
+        self.recv_socket.close()

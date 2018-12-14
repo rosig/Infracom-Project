@@ -11,7 +11,6 @@ def menu():
     print("+------------------ Funcoes -------------------+")
     print("| (1) Solicitar Arquivo                        |")
     print("| (2) Listar Arquivos do Servidor              |")
-    print("| (3) Encerrar conexao com o servidor          |")
     print("+----------------------------------------------+\n")
 
 def getOp():

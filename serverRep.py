@@ -62,12 +62,11 @@ def handle_client():
         if msg[2] == "checkFiles":
             updateFileFolder()
             #print("\nFiles in your folder:")
-
             server.send(str(os.path.getsize(DATA)), msg[0], msg[1])
             arq = open(DATA, 'rb')
             
             for line in arq:
-                server.send(str(line), msg[0], msg[1])
+                server.send(line.decode('utf8','surrogateescape'), msg[0], msg[1])
 
             arq.close()
 
@@ -75,11 +74,11 @@ def handle_client():
             fileName = server.receive()[2]
             if (os.path.isfile(os.path.join(FOLDER, fileName))): #verifica se o arquivo que se deseja baixar está contido no servidor
                 server.send("exist", msg[0], msg[1])
-                server.send((str(os.path.getsize(os.path.join(FOLDER, fileName)))), msg[0], msg[1])
+                server.send(str(os.path.getsize(os.path.join(FOLDER, fileName))), msg[0], msg[1])
                 arq = open(os.path.join(FOLDER, fileName), 'rb')
             
                 for line in arq:
-                    server.send(str(line), msg[0], msg[1])
+                    server.send(line.decode('utf8','surrogateescape'), msg[0], msg[1])
 
                 arq.close()
 

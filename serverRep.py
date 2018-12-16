@@ -12,17 +12,21 @@ server = svr.TCPServerSocket()
 #coloque abaixo o diretorio onde esta rodando o codigo, seguido de \\server\\
 DATA = os.path.join(FOLDER, "dados.txt")
 
+#Verificar se pasta do servidor existe. Criá-la se não
 try:
     os.stat(FOLDER)
-    os.stat(FOLDER_CLI)
-    arq = open(DATA, 'wb')
-    arq.close()
 except:
     os.mkdir(FOLDER)
+
+#Verificar se pasta do cliente existe. Criá-la se não
+try:
+    os.stat(FOLDER_CLI)
+except:
     os.mkdir(FOLDER_CLI)
-    arq = open(DATA, 'wb')
-    arq.close()
-    #print("Uma pasta para os clientes e uma pasta para o servidor foram criadas")
+
+
+arq = open(DATA, 'wb')
+arq.close()
 
 def updateFileFolder():
     i = 0
@@ -89,6 +93,8 @@ def handle_client(index):
 
         elif msg == "socketClose":
             print("# A conexão com o cliente de index ",index," foi encerrada")
+            _thread.exit()
+            
 def main():
 
     sendToDNS()

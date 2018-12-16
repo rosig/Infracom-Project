@@ -93,6 +93,7 @@ def handle_client(index):
 
         elif msg == "socketClose":
             print("# A conexão com o cliente de index ",index," foi encerrada")
+            server.closeConnection(index)
             _thread.exit()
             
 def main():

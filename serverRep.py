@@ -15,15 +15,16 @@ DATA = os.path.join(FOLDER, "dados.txt")
 
 try:
     os.stat(FOLDER)
-    os.stat(FOLDER_CLI)
-    arq = open(DATA, 'wb')
-    arq.close()
 except:
     os.mkdir(FOLDER)
+
+try:
+    os.stat(FOLDER_CLI)
+except:
     os.mkdir(FOLDER_CLI)
-    arq = open(DATA, 'wb')
-    arq.close()
-    #print("Uma pasta para os clientes e uma pasta para o servidor foram criadas")
+
+arq = open(DATA, 'wb')
+arq.close()
 
 def updateFileFolder():
     i = 0
@@ -86,6 +87,8 @@ def handle_client():
             else:
                 server.send("notExist",msg[0], msg[1])
                 print ("# Arquivo nao existe\n")
+        elif msg[2] == "socketClose":
+            print("Conexão encerrada. Aguardando clientes...")
 
 def main():
 

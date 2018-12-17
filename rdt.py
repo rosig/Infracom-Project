@@ -6,7 +6,6 @@ class Socket:
     recv_socket = socket(AF_INET,SOCK_DGRAM)
     seq = 0
     expected_seq = 0
-    timeout_counter = 0
 
     def bind(self, recv_addr, recv_port): # Bind the receiver socket
         self.recv_port = recv_port
@@ -41,15 +40,8 @@ class Socket:
             try:
                 message, address = self.recv_socket.recvfrom(4096)
             except timeout:
-                self.timeout_counter += 1
-                
-                if self.timeout_counter == 3:
-                    self.timeout_counter = 0
-                    return -1
-                
                 pass
             else:
-                self.timeout_counter = 0
                 break
         
         cli_addr = 'localhost'
